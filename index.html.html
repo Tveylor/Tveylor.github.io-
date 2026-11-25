@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tveylor Help PVP (THP) — База по 1.9+ Sword PvP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #09090b;
+    --surface: #111114;
+    --surface-hover: #18181c;
+    --border: #232329;
+    --border-bright: #32323b;
+    --text: #f4f4f6;
+    --muted: #9898a3;
+    --accent: #f43f5e;
+    --accent-soft: rgba(244, 63, 94, 0.12);
+    --accent-glow: rgba(244, 63, 94, 0.25);
+    --green: #10b981;
+    --amber: #f59e0b;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', -apple-system, sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+  }
+
+  body {
+    line-height: 1.6;
+    overflow-x: hidden;
+    background-image: radial-gradient(circle at 50% 0%, rgba(244, 63, 94, 0.06) 0%, transparent 55%);
+  }
+
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* HEADER */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(9, 9, 11, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-inner {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+  }
+
+  .brand-tag {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    padding: 3px 8px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    border-radius: 6px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: var(--text);
+  }
+
+  .menu-btn {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 72px 0 64px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 5px 12px;
+    border-radius: 99px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.1rem, 4.2vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    margin-bottom: 18px;
+  }
+
+  .hero h1 span {
+    color: var(--accent);
+  }
+
+  .hero-desc {
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin-bottom: 28px;
+    max-width: 540px;
+  }
+
+  .hero-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: #e11d48;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px var(--accent-glow);
+  }
+
+  .btn-ghost {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--border-bright);
+    background: var(--surface-hover);
+  }
+
+  /* HIT COOLDOWN WIDGET */
+  .trainer-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    user-select: none;
+  }
+
+  .trainer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .trainer-pad {
+    background: var(--bg);
+    border: 1px dashed var(--border-bright);
+    border-radius: 12px;
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .trainer-pad:active {
+    transform: scale(0.99);
+  }
+
+  .trainer-status {
+    font-family: var(--mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .trainer-sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .bar-wrap {
+    height: 8px;
+    background: #1c1c21;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-top: 18px;
+  }
+
+  .bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: background 0.1s;
+  }
+
+  .trainer-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 72px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sec-head {
+    margin-bottom: 36px;
+  }
+
+  .sec-num {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .sec-head h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .sec-head p {
+    color: var(--muted);
+    max-width: 620px;
+    font-size: 0.98rem;
+  }
+
+  /* MECHANICS TABS */
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .tab-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab-btn:hover {
+    color: var(--text);
+    border-color: var(--border-bright);
+  }
+
+  .tab-btn.active {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  .tab-panel {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+  }
+
+  .tab-panel.active {
+    display: block;
+  }
+
+  .tab-panel h3 {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+
+  .tab-panel p {
+    color: var(--muted);
+    margin-bottom: 16px;
+    font-size: 0.96rem;
+  }
+
+  .mech-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .mech-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 18px;
+    border-radius: 12px;
+  }
+
+  .mech-card strong {
+    display: block;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  .mech-card span {
+    font-size: 0.88rem;
+    color: var(--muted);
+    display: block;
+  }
+
+  /* TIER SYSTEM */
+  .tier-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .tier-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .tier-pill.top {
+    border-color: rgba(244, 63, 94, 0.45);
+    background: linear-gradient(180deg, rgba(244, 63, 94, 0.08) 0%, var(--surface) 100%);
+  }
+
+  .tier-code {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .tier-pill.top .tier-code {
+    color: var(--accent);
+  }
+
+  .tier-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .server-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .srv-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .srv-info h4 {
+    font-size: 0.98rem;
+    margin-bottom: 2px;
+  }
+
+  .srv-info p {
+    font-size: 0.83rem;
+    color: var(--muted);
+  }
+
+  .copy-ip {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border-bright);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .copy-ip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* TRAINING CHECKLIST */
+  .train-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .train-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .train-item:hover {
+    border-color: var(--border-bright);
+  }
+
+  .train-item.done {
+    opacity: 0.55;
+  }
+
+  .check-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border-bright);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: #fff;
+  }
+
+  .train-item.done .check-box {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .train-content h4 {
+    font-size: 0.98rem;
+    margin-bottom: 4px;
+  }
+
+  .train-content p {
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  /* PLAYERS / WATCHLIST */
+  .watch-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .watch-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+  }
+
+  .watch-tag {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .watch-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  .watch-card p {
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  /* GLOSSARY */
+  .search-input {
+    width: 100%;
+    max-width: 380px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 11px 16px;
+    border-radius: 10px;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+    outline: none;
+  }
+
+  .search-input:focus {
+    border-color: var(--accent);
+  }
+
+  .gloss-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .gloss-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+  }
+
+  .gloss-term {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .gloss-def {
+    font-size: 0.86rem;
+    color: var(--muted);
+  }
+
+  /* CONFIG */
+  .cfg-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .cfg-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+  }
+
+  .cfg-card h3 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+
+  .cfg-list {
+    list-style: none;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  .cfg-list li {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .cfg-list li:last-child {
+    border-bottom: none;
+  }
+
+  .cfg-val {
+    font-family: var(--mono);
+    color: var(--text);
+    font-size: 0.82rem;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.86rem;
+  }
+
+  footer strong {
+    color: var(--text);
+  }
+
+  @media (max-width: 860px) {
+    .hero-grid,
+    .mech-grid,
+    .server-grid,
+    .watch-grid,
+    .gloss-grid,
+    .cfg-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tier-row {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .nav-links {
+      display: none;
+    }
+
+    .nav-links.open {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .menu-btn {
+      display: block;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav-inner">
+    <a href="#" class="brand">
+      Tveylor Help PVP <span class="brand-tag">THP</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#mechanics">Механика</a></li>
+      <li><a href="#tiers">Тиры и сервера</a></li>
+      <li><a href="#training">Как тренить</a></li>
+      <li><a href="#watch">Кого смотреть</a></li>
+      <li><a href="#glossary">Сленг</a></li>
+      <li><a href="#config">Настройки</a></li>
+    </ul>
+    <button class="menu-btn" id="menuBtn">Меню</button>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="kicker">// 1.9+ SWORD PVP БАЗА БЕЗ ВОДЫ</span>
+        <h1>Хватит кликать впустую. Разбери <span>механику</span> и забирай свой тир.</h1>
+        <p class="hero-desc">
+          Если ты зашёл в 1.9+ дуэли и не понимаешь, почему челы не откидываются, перебивают каждый трейд и держат тебя в воздухе на трёх блоках — здесь всё разложено по фактам. От нуля до уверенного тира без душных лекций.
+        </p>
+        <div class="hero-btns">
+          <a href="#mechanics" class="btn btn-primary">Разобрать базу</a>
+          <a href="#tiers" class="btn btn-ghost">Где тестить тир</a>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE 0.625s HIT COOLDOWN -->
+      <div class="trainer-box">
+        <div class="trainer-top">
+          <span>ТРЕНАЖЁР КУЛДАУНА МЕЧА</span>
+          <span>625 МС</span>
+        </div>
+        <div class="trainer-pad" id="hitPad">
+          <div class="trainer-status" id="hitStatus">Кликни, чтобы сделать первый удар</div>
+          <div class="trainer-sub" id="hitSub">Второй клик делай ровно когда шкала дойдёт до конца</div>
+          <div class="bar-wrap">
+            <div class="bar-fill" id="barFill"></div>
+          </div>
+        </div>
+        <div class="trainer-stats">
+          <span>Комбо критов: <strong id="comboVal" style="color:var(--text)">0</strong></span>
+          <span>Тайминг: <strong id="msVal" style="color:var(--text)">—</strong></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MECHANICS -->
+  <section id="mechanics">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-num">01 / МЕХАНИКА БОЯ</span>
+        <h2>Что реально решает в дуэли</h2>
+        <p>В 1.9+ побеждает не тот, у кого 20 КПС, а тот, кто контролирует импульс, дистанцию и хит-селект.</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="t1">Кулдаун и тайминги</button>
+        <button class="tab-btn" data-tab="t2">Криты против W-tap</button>
+        <button class="tab-btn" data-tab="t3">Комбо и Reach 3.0</button>
+        <button class="tab-btn" data-tab="t4">Hit-select и стрейфы</button>
+      </div>
+
+      <div class="tab-panel active" id="t1">
+        <h3>Почему спам-клик убивает твой урон</h3>
+        <p>
+          У незеритового и алмазного меча скорость атаки 1.6 — это значит, что полный заряд шкалы занимает ровно <strong>0.625 секунды (625 мс)</strong>. Если ты бьёшь раньше, урон режется в ноль, а соперник даже не получает нормального откидывания.
+        </p>
+        <div class="mech-grid">
+          <div class="mech-card">
+            <strong>Окно неуязвимости (I-frames)</strong>
+            <span>После любого удара у игрока есть 0.5 сек (10 тиков), когда он красный и не получает новый урон. Кулдаун меча длиннее этого окна — поэтому ты всегда бьёшь в тайминг, если ждёшь полную шкалу.</span>
+          </div>
+          <div class="mech-card">
+            <strong>Sweeping Edge (Размашистый удар)</strong>
+            <span>Если ты стоишь на месте без спринта и бьёшь с полным зарядом, проходит размашистый удар. В дуэлях 1 на 1 он не даёт бонусов — тебе нужен либо спринт-хит, либо крит в падении.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="t2">
+        <h3>Разница между Спринт-хитом (W-tap) и Критом</h3>
+        <p>
+          Главная ошибка новичков — пытаться критовать с самого начала файта. В 1.9+ эти два удара работают по-разному и взаимоисключают друг друга: ты не можешь дать крит, пока у тебя активен спринт.
+        </p>
+        <div class="mech-grid">
+          <div class="mech-card">
+            <strong>Спринт-хит (W-tap / S-tap)</strong>
+            <span>Даёт повышенное откидывание (KB). Чтобы каждый удар откидывал как первый, нужно на долю секунды отпустить <strong>W</strong> сразу после удара и нажать снова (сброс спринта). Это основа для старта комбо.</span>
+          </div>
+          <div class="mech-card">
+            <strong>Крит (Critical Hit)</strong>
+            <span>Проходит только когда ты падаешь вниз после прыжка и не зажат спринт. Крит наносит 150% урона, но почти не откидывает врага. Юзай серию критов (crit-chain), когда вы зашли в плотный размен лицом к лицу.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="t3">
+        <h3>Как держать комбо на дистанции 3 блоков</h3>
+        <p>
+          У всех игроков в ванилле одинаковый рич — <strong>3.0 блока</strong>. Кажется, что ударить первым на равных невозможно, но всё решает геометрия и сброс скорости.
+        </p>
+        <div class="mech-grid">
+          <div class="mech-card">
+            <strong>Правило Low Ground (нижняя позиция)</strong>
+            <span>Расстояние считается от твоих глаз до ближайшей точки хитбокса врага. Если соперник подлетел в воздух от твоего спринт-хита, его глаза выше твоих — ты достаёшь до его ног с 3 блоков, а он до твоей головы нет.</span>
+          </div>
+          <div class="mech-card">
+            <strong>Удержание дистанции</strong>
+            <span>Когда противник в воздухе, не беги в него вплотную, иначе он достанет до тебя. Делай микро-паузы через W-tap или лёгкий S-tap, чтобы держать его ровно на границе третьего блока.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="t4">
+        <h3>Hit-select и умные стрейфы</h3>
+        <p>
+          Просто зажимать A и D по кругу против нормального игрока бесполезно — он легко доведёт прицел. Движение нужно для того, чтобы сбивать тайминг чужого удара.
+        </p>
+        <div class="mech-grid">
+          <div class="mech-card">
+            <strong>Что такое Hit-select</strong>
+            <span>Ты специально задерживаешь свой удар на долю секунды, даёшь сопернику ударить тебя первым, подлетаешь вверх и в падении даёшь ему ответный хит с более выгодной позиции — так ты перехватываешь инициативу в трейде.</span>
+          </div>
+          <div class="mech-card">
+            <strong>Рваный стрейф (A/D)</strong>
+            <span>Меняй направление сразу после того, как получил или дал хит. Если враг ждёт тебя справа, резкий уход влево заставит его промахнуться по хитбоксу и потерять 0.625 сек на перезарядку.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIER SYSTEM -->
+  <section id="tiers">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-num">02 / РАНГИ И СЕРВЕРА</span>
+        <h2>Как устроена система тиров</h2>
+        <p>В комьюнити уровень игрока меряют не цифрами эло, а тирами на официальных тирлистах (MCTiers и др.).</p>
+      </div>
+
+      <div class="tier-row">
+        <div class="tier-pill">
+          <div class="tier-code">LT5 / HT5</div>
+          <div class="tier-desc">База: знаешь про кулдаун, учишься W-tap и не спамишь</div>
+        </div>
+        <div class="tier-pill">
+          <div class="tier-code">LT4 / HT4</div>
+          <div class="tier-desc">Уверенный старт: держишь комбо, понимаешь крит-трейды</div>
+        </div>
+        <div class="tier-pill">
+          <div class="tier-code">LT3 / HT3</div>
+          <div class="tier-desc">Средний уровень: стабильный аим, юзаешь hit-select</div>
+        </div>
+        <div class="tier-pill top">
+          <div class="tier-code">LT2 / HT2</div>
+          <div class="tier-desc">Сильные дуэлянты: жёсткий контроль дистанции и таймингов</div>
+        </div>
+        <div class="tier-pill top">
+          <div class="tier-code">LT1 / HT1</div>
+          <div class="tier-desc">Топ сцены: идеальный мувмент и чтение каждого шага врага</div>
+        </div>
+      </div>
+
+      <div class="mech-card" style="margin-bottom: 24px;">
+        <strong>Как проходит тест на тир (Evaluation) и как не занервничать</strong>
+        <span>Ты заходишь в очередь в Discord тирлиста, тебя вызывает официальный тестер на сервер. Обычно играют серию до 10 побед (FT10). Тестер смотрит не только на счёт, но и на то, как ты двигаешься, умеешь ли выходить из комбо и как трекаешь хитбокс. Главный совет: перед тестом отыграй 15 минут разминки и воспринимай тестера как обычного спарринг-партнёра — зажатые руки портят аим сильнее всего.</span>
+      </div>
+
+      <h3 style="font-size: 1.1rem; margin-bottom: 12px;">Где тренироваться и проходить тесты (нажми на IP, чтобы скопировать)</h3>
+      <div class="server-grid">
+        <div class="srv-card">
+          <div class="srv-info">
+            <h4>McPvP Club</h4>
+            <p>Главная площадка для EU/СНГ дуэлей и официальных тестов</p>
+          </div>
+          <button class="copy-ip" data-ip="mcpvp.club">mcpvp.club</button>
+        </div>
+        <div class="srv-card">
+          <div class="srv-info">
+            <h4>PvP Legacy</h4>
+            <p>Огромный онлайн, кастомные киты и быстрый подбор соперников</p>
+          </div>
+          <button class="copy-ip" data-ip="play.pvplegacy.net">play.pvplegacy.net</button>
+        </div>
+        <div class="srv-card">
+          <div class="srv-info">
+            <h4>Feelz</h4>
+            <p>Популярный сервер с хорошей регистрацией хитов для практики</p>
+          </div>
+          <button class="copy-ip" data-ip="feelz.gg">feelz.gg</button>
+        </div>
+        <div class="srv-card">
+          <div class="srv-info">
+            <h4>PvP Land</h4>
+            <p>Удобные боты для отработки W-tap и аима перед катками</p>
+          </div>
+          <button class="copy-ip" data-ip="pvp.land">pvp.land</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRAINING PLAN -->
+  <section id="training">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-num">03 / ПЛАН ТРЕНИРОВКИ</span>
+        <h2>Как тренить, а не просто сливать катки</h2>
+        <p>Кликай по пунктам во время разминки, чтобы отмечать прогресс.</p>
+      </div>
+
+      <div class="train-list">
+        <div class="train-item" onclick="this.classList.toggle('done')">
+          <div class="check-box">✓</div>
+          <div class="train-content">
+            <h4>1. Разминка кисти и трекинг (10 минут)</h4>
+            <p>Зайди на бота или в обычный фри-фор-олл. Не пытайся выиграть — твоя задача просто плавно вести прицел ровно по уровню глаз противника без резких рывков.</p>
+          </div>
+        </div>
+        <div class="train-item" onclick="this.classList.toggle('done')">
+          <div class="check-box">✓</div>
+          <div class="train-content">
+            <h4>2. Изолированный W-tap и дистанция (15 минут)</h4>
+            <p>Отыграй 5–7 дуэлей с фокусом только на сбросе спринта. После каждого удара отпускай W на долю секунды. Следи, чтобы соперник не подходил ближе 2.5–3 блоков.</p>
+          </div>
+        </div>
+        <div class="train-item" onclick="this.classList.toggle('done')">
+          <div class="check-box">✓</div>
+          <div class="train-content">
+            <h4>3. Крит-трейды и выход из комбо (15 минут)</h4>
+            <p>Тренируй переход из обычного размена в серию критов в падении. Если тебя закомбили — не жми W в лоб, отпрыгни назад с S и разорви дистанцию.</p>
+          </div>
+        </div>
+        <div class="train-item" onclick="this.classList.toggle('done')">
+          <div class="check-box">✓</div>
+          <div class="train-content">
+            <h4>4. Разбор слитых дуэлей (5 минут)</h4>
+            <p>Записывай экран через OBS или Replay Mod. После поражения пересмотри момент, где тебя перебили: ты не отжал W, ударил раньше 625 мс или промазал мимо хитбокса?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WATCHLIST -->
+  <section id="watch">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-num">04 / БАЗА ЗНАНИЙ</span>
+        <h2>Кого смотреть и что изучать</h2>
+        <p>Не смотри нарезки под фонк без анализа — ищи разборы механик и дуэли топ-игроков.</p>
+      </div>
+
+      <div class="watch-grid">
+        <div class="watch-card">
+          <span class="watch-tag">ТОП SWORD / МЕХАНИКА</span>
+          <h3>Coldified</h3>
+          <p>Один из сильнейших игроков в Sword PvP. Смотри его дуэли, чтобы понять идеальный контроль дистанции, работу через hit-select и грамотные крит-чейны.</p>
+        </div>
+        <div class="watch-card">
+          <span class="watch-tag">МУВМЕНТ И ТАЙМИНГИ</span>
+          <h3>ItzRealMe</h3>
+          <p>Эталон чистого мувмента и стабильности в 1.9+. Обращай внимание на то, как он двигается на A/D и почти никогда не теряет первый удар в размене.</p>
+        </div>
+        <div class="watch-card">
+          <span class="watch-tag">РАЗБОРЫ И СНГ-СЦЕНА</span>
+          <h3>Clownpierce и СНГ-гайдеры</h3>
+          <p>У Clownpierce отличный контроль темпа боя, а на YouTube по запросам «1.9 sword pvp гайд w-tap / hit-select» есть свежие разборы на русском с показом нажатий клавиш (Keystrokes).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GLOSSARY -->
+  <section id="glossary">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-num">05 / СЛОВАРЬ КОМЬЮНИТИ</span>
+        <h2>Сленг, который нужно знать</h2>
+        <p>Чтобы не тупить в чате сервера и на тир-тестах.</p>
+      </div>
+
+      <input type="text" class="search-input" id="glossSearch" placeholder="Поиск по термину (например, W-tap или Reach)...">
+
+      <div class="gloss-grid" id="glossGrid">
+        <div class="gloss-card" data-term="w-tap втап">
+          <div class="gloss-term">W-tap</div>
+          <div class="gloss-def">Кратковременное отпускание клавиши W после удара для сброса спринта, чтобы следующий хит снова дал максимальное откидывание.</div>
+        </div>
+        <div class="gloss-card" data-term="s-tap стап">
+          <div class="gloss-term">S-tap</div>
+          <div class="gloss-def">Короткое нажатие S после удара. Помогает не только сбросить спринт, но и слегка оттянуться назад, удерживая врага на 3 блоках.</div>
+        </div>
+        <div class="gloss-card" data-term="hit-select хитселект">
+          <div class="gloss-term">Hit-select</div>
+          <div class="gloss-def">Намеренная задержка своего удара, чтобы принять первый хит от врага и сразу перебить его ответным ударом в комбо.</div>
+        </div>
+        <div class="gloss-card" data-term="crit-chain критчейн критспам">
+          <div class="gloss-term">Crit-chain</div>
+          <div class="gloss-def">Серия последовательных критических ударов в прыжке без спринта, которая быстро сносит ХП в плотном размене.</div>
+        </div>
+        <div class="gloss-card" data-term="reach рич">
+          <div class="gloss-term">Reach</div>
+          <div class="gloss-def">Дистанция удара. В стандартном Minecraft она равна ровно 3.0 блока от глаз атакующего до хитбокса цели.</div>
+        </div>
+        <div class="gloss-card" data-term="kb knockback кб откидывание">
+          <div class="gloss-term">KB (Knockback)</div>
+          <div class="gloss-def">Сила и траектория откидывания после удара. Зависит от спринта, пинга и того, находишься ли ты в воздухе.</div>
+        </div>
+        <div class="gloss-card" data-term="strafe стрейф">
+          <div class="gloss-term">Strafe</div>
+          <div class="gloss-def">Движение влево-вправо (A/D) вокруг соперника, чтобы усложнить ему наводку прицела на твой хитбокс.</div>
+        </div>
+        <div class="gloss-card" data-term="sweeping edge размашистый удар">
+          <div class="gloss-term">Sweeping Edge</div>
+          <div class="gloss-def">Размашистая атака мечом без спринта и прыжка. В 1v1 невыгодна, так как не даёт ни бонус-урона, ни сильного KB.</div>
+        </div>
+        <div class="gloss-card" data-term="ping-spoof пингспуф">
+          <div class="gloss-term">Ping-spoof</div>
+          <div class="gloss-def">Искусственная задержка пакетов (чит), создающая отложенное откидывание. Запрещён на всех серверах и карается баном.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONFIG -->
+  <section id="config" style="border-bottom: none;">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-num">06 / КОНФИГ И СБОРКА</span>
+        <h2>Настройки для чистого PvP</h2>
+        <p>Ничего лишнего — только то, что реально разрешено на тир-тестах и повышает FPS.</p>
+      </div>
+
+      <div class="cfg-grid">
+        <div class="cfg-card">
+          <h3>Игра и мышь</h3>
+          <ul class="cfg-list">
+            <li><span>FOV (Поле зрения)</span><span class="cfg-val">75 – 85</span></li>
+            <li><span>Динамический FOV</span><span class="cfg-val">ВЫКЛ</span></li>
+            <li><span>Покачивание камеры</span><span class="cfg-val">ВЫКЛ</span></li>
+            <li><span>Индикатор атаки</span><span class="cfg-val">Прицел (Crosshair)</span></li>
+            <li><span>DPI / Сенса</span><span class="cfg-val">800 DPI / 40–60%</span></li>
+          </ul>
+        </div>
+
+        <div class="cfg-card">
+          <h3>Ресурспак (Текстуры)</h3>
+          <ul class="cfg-list">
+            <li><span>Огонь (Low Fire)</span><span class="cfg-val">Низкий, не закрывает экран</span></li>
+            <li><span>Мечи (Short Swords)</span><span class="cfg-val">Короткие клинки</span></li>
+            <li><span>Партиклы критов</span><span class="cfg-val">Чёткие, без лишнего шума</span></li>
+            <li><span>Небо</span><span class="cfg-val">Тёмное / минимализм</span></li>
+          </ul>
+        </div>
+
+        <div class="cfg-card">
+          <h3>Моды на Fabric (Легальные)</h3>
+          <ul class="cfg-list">
+            <li><span>Sodium + Lithium</span><span class="cfg-val">Максимум FPS без фризов</span></li>
+            <li><span>Status Effect HUD</span><span class="cfg-val">Таймер баффов на экране</span></li>
+            <li><span>Armor HUD</span><span class="cfg-val">Прочность брони</span></li>
+            <li><span>AppleSkin</span><span class="cfg-val">Насыщение от еды</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <strong>Tveylor Help PVP (THP)</strong> · Сделано для тех, кто хочет расти в 1.9+ Sword PvP без лишней воды.
+  </div>
+</footer>
+
+<script>
+  // Мобильное меню
+  const menuBtn = document.getElementById('menuBtn');
+  const navLinks = document.getElementById('navLinks');
+  menuBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+
+  // Вкладки механик
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      tabPanels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Копирование IP серверов
+  document.querySelectorAll('.copy-ip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const ip = btn.dataset.ip;
+      navigator.clipboard.writeText(ip).then(() => {
+        const old = btn.textContent;
+        btn.textContent = 'Скопировано!';
+        btn.style.borderColor = 'var(--green)';
+        btn.style.color = 'var(--green)';
+        setTimeout(() => {
+          btn.textContent = old;
+          btn.style.borderColor = '';
+          btn.style.color = '';
+        }, 1400);
+      });
+    });
+  });
+
+  // Поиск по словарю
+  const glossSearch = document.getElementById('glossSearch');
+  const glossCards = document.querySelectorAll('.gloss-card');
+  glossSearch.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    glossCards.forEach(card => {
+      const text = (card.dataset.term + ' ' + card.textContent).toLowerCase();
+      card.style.display = text.includes(q) ? 'block' : 'none';
+    });
+  });
+
+  // Тренажёр кулдауна 625 мс
+  const hitPad = document.getElementById('hitPad');
+  const hitStatus = document.getElementById('hitStatus');
+  const hitSub = document.getElementById('hitSub');
+  const barFill = document.getElementById('barFill');
+  const comboVal = document.getElementById('comboVal');
+  const msVal = document.getElementById('msVal');
+
+  let lastHit = 0;
+  let combo = 0;
+  let animId = null;
+
+  function updateBar() {
+    if (!lastHit) return;
+    const elapsed = performance.now() - lastHit;
+    const pct = Math.min((elapsed / 625) * 100, 100);
+    barFill.style.width = pct + '%';
+    if (pct >= 100) {
+      barFill.style.background = 'var(--green)';
+    } else {
+      barFill.style.background = 'var(--accent)';
+    }
+    if (pct < 100) {
+      animId = requestAnimationFrame(updateBar);
+    }
+  }
+
+  hitPad.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    const now = performance.now();
+
+    if (lastHit === 0) {
+      lastHit = now;
+      hitStatus.textContent = 'Жди заполнения...';
+      hitStatus.style.color = 'var(--text)';
+      hitSub.textContent = 'Бей сразу, как полоска станет зелёной';
+      cancelAnimationFrame(animId);
+      animId = requestAnimationFrame(updateBar);
+      return;
+    }
+
+    const diff = Math.round(now - lastHit);
+    msVal.textContent = diff + ' мс';
+
+    if (diff < 625) {
+      combo = 0;
+      hitStatus.textContent = `Рано! Спам-хит (${diff} мс)`;
+      hitStatus.style.color = 'var(--accent)';
+      hitSub.textContent = 'Удар прошёл без полного заряда — урон порезан';
+    } else if (diff <= 675) {
+      combo++;
+      hitStatus.textContent = `ИДЕАЛЬНЫЙ ТАЙМИНГ! (${diff} мс)`;
+      hitStatus.style.color = 'var(--green)';
+      hitSub.textContent = 'Максимальный урон и чистый контроль';
+    } else {
+      combo = 0;
+      hitStatus.textContent = `Поздновато (${diff} мс)`;
+      hitStatus.style.color = 'var(--amber)';
+      hitSub.textContent = 'Соперник успел бы перебить тебя первым';
+    }
+
+    comboVal.textContent = combo;
+    lastHit = now;
+    barFill.style.width = '0%';
+    cancelAnimationFrame(animId);
+    animId = requestAnimationFrame(updateBar);
+  });
+</script>
+</body>
+</html>
